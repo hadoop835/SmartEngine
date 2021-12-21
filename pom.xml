@@ -81,6 +81,7 @@
         <module>extension/retry/retry-common</module>
         <module>extension/retry/retry-custom</module>
         <module>extension/retry/retry-mysql</module>
+        <module>smart-engine-spring-boot-starter</module>
 
     </modules>
 
