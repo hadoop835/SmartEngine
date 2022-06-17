@@ -1,5 +1,9 @@
+# 2.6.4
+1. [微型非兼容升级] 修改IdGenerator 的实现策略, 现在除了实现id策略后,还需要手动给instance 赋值才生效 (使用上有部分退化,为了后续使用表自增主键做准备,以及支持细粒度的id生成策略). 
+2. [微型非兼容升级] 修改TaskCommandService#complete的返回值,从void类型改为ProcessInstance
+
 # 2.6.3
-1. 微改进,支持了DefaultSequenceFlow 特性;重构了并行网关下的并发服务编排的逻辑,对可读性做了重点优化.
+1. 微改进,支持了互斥网关的 DefaultSequenceFlow 特性;重构了并行网关下的并发服务编排的逻辑,对可读性做了重点优化.
 
 # 2.6.2
 1. [微型非兼容升级]修改TaskAssigneeDispatcher#getTaskAssigneeCandidateInstance 第二个参数,将Map类型修改为Context,便于获得流程定义参数.
