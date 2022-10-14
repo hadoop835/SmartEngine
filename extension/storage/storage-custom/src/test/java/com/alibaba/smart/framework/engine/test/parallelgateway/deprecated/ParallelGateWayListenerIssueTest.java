@@ -1,4 +1,4 @@
-package com.alibaba.smart.framework.engine.test;
+package com.alibaba.smart.framework.engine.test.parallelgateway.deprecated;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +23,7 @@ import org.junit.Test;
   * @date 2021/03/02
  */
 public class ParallelGateWayListenerIssueTest extends ParallelGateWayListenerIssueConfiguration {
+
 
     @Before
     public void deploy() {

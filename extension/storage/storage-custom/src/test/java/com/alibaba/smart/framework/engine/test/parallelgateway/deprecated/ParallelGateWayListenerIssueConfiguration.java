@@ -1,4 +1,4 @@
-package com.alibaba.smart.framework.engine.test;
+package com.alibaba.smart.framework.engine.test.parallelgateway.deprecated;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +36,7 @@ import com.alibaba.smart.framework.engine.service.query.RepositoryQueryService;
 import org.junit.Before;
 
 public class ParallelGateWayListenerIssueConfiguration {
+
 
     protected SmartEngine smartEngine = null;
 
@@ -168,14 +169,14 @@ public class ParallelGateWayListenerIssueConfiguration {
         private ConcurrentHashMap<String, Object> lock = new ConcurrentHashMap<String, Object>();
 
         @Override
-        public void tryLock(String s, ExecutionContext executionContext) throws LockException {
+        public void tryLock(String processInstanceId, ExecutionContext executionContext) throws LockException {
             if (executionContext == null) {
                 return;
             }
-            if (lock.contains(s)) {
-                throw new LockException("[Test lock] key already exists, " + s);
+            if (lock.contains(processInstanceId)) {
+                throw new LockException("[Test lock] key already exists, " + processInstanceId);
             }
-            lock.put(s, s);
+            lock.put(processInstanceId, processInstanceId);
         }
 
         @Override
