@@ -71,7 +71,7 @@ public abstract  class CommonServiceHelper {
 
         ProcessInstance newProcessInstance =  processInstanceStorage.insert(processInstance, processEngineConfiguration);
 
-        persisteVariableInstanceIfPossible(request, processEngineConfiguration,
+        persistVariableInstanceIfPossible(request, processEngineConfiguration,
             newProcessInstance, AdHocConstant.DEFAULT_ZERO_VALUE);
 
         persist(newProcessInstance,processEngineConfiguration);
@@ -79,9 +79,9 @@ public abstract  class CommonServiceHelper {
         return newProcessInstance;
     }
 
-    private static void persisteVariableInstanceIfPossible(Map<String, Object> request,
-                                                           ProcessEngineConfiguration processEngineConfiguration,
-                                                           ProcessInstance newProcessInstance,String executionInstanceId) {
+    private static void persistVariableInstanceIfPossible(Map<String, Object> request,
+                                                          ProcessEngineConfiguration processEngineConfiguration,
+                                                          ProcessInstance newProcessInstance, String executionInstanceId) {
         VariablePersister variablePersister = processEngineConfiguration.getVariablePersister();
         if( variablePersister.isPersisteVariableInstanceEnabled() && null!= request ){
             AnnotationScanner annotationScanner = processEngineConfiguration.getAnnotationScanner();
@@ -121,7 +121,7 @@ public abstract  class CommonServiceHelper {
 
         ProcessInstance newProcessInstance = processInstanceStorage.update(processInstance,processEngineConfiguration );
 
-        persisteVariableInstanceIfPossible(request, processEngineConfiguration,
+        persistVariableInstanceIfPossible(request, processEngineConfiguration,
             newProcessInstance,executionInstanceId);
 
         persist(processInstance   ,  processEngineConfiguration );

@@ -88,12 +88,11 @@ public class DefaultExecutionCommandService implements ExecutionCommandService, 
     public ProcessInstance signal(String executionInstanceId, Map<String, Object> request,
                                   Map<String, Object> response) {
 
+
         ExecutionInstance executionInstance = queryExecutionInstance(executionInstanceId);
 
         ProcessInstance processInstance = processInstanceStorage.findOne(executionInstance.getProcessInstanceId()
-            , processEngineConfiguration);
-
-
+                , processEngineConfiguration);
         try {
 
             PreparePhase preparePhase = new PreparePhase(request, executionInstance,  processInstance,instanceContextFactory).init();
@@ -114,6 +113,7 @@ public class DefaultExecutionCommandService implements ExecutionCommandService, 
 
             return newProcessInstance;
         } finally {
+
             CommonServiceHelper.tryUnlock(processEngineConfiguration, processInstance);
         }
     }
@@ -296,13 +296,11 @@ public class DefaultExecutionCommandService implements ExecutionCommandService, 
         private PvmProcessDefinition pvmProcessDefinition;
         private ExecutionContext executionContext;
         private ProcessInstance processInstance;
-        private ContextFactory contextFactory;
 
         public PreparePhase(Map<String, Object> request, ExecutionInstance executionInstance,ProcessInstance processInstance,ContextFactory instanceContextFactory) {
             this.request = request;
             this.executionInstance = executionInstance;
             this.processInstance = processInstance;
-            this.contextFactory =instanceContextFactory;
         }
 
         public PvmProcessDefinition getPvmProcessDefinition() {
