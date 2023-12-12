@@ -5,6 +5,7 @@ import com.alibaba.smart.framework.engine.common.util.MapUtil;
 import com.alibaba.smart.framework.engine.configuration.ExceptionProcessor;
 import com.alibaba.smart.framework.engine.configuration.ParallelServiceOrchestration;
 import com.alibaba.smart.framework.engine.configuration.ProcessEngineConfiguration;
+import com.alibaba.smart.framework.engine.configuration.PvmActivityTask;
 import com.alibaba.smart.framework.engine.configuration.scanner.AnnotationScanner;
 import com.alibaba.smart.framework.engine.constant.ParallelGatewayConstant;
 import com.alibaba.smart.framework.engine.context.ExecutionContext;
@@ -130,7 +131,8 @@ public class DefaultParallelServiceOrchestration implements ParallelServiceOrche
             //将ParentContext 复制到 子线程内
             ExecutionContext subThreadContext = contextFactory.createChildThreadContext(context);
 
-            PvmActivityTask pvmActivityTask = new PvmActivityTask(target, subThreadContext);
+            PvmActivityTask pvmActivityTask = context.getProcessEngineConfiguration().getPvmActivityTaskFactory().create(target,subThreadContext);
+
 
             LOGGER.debug("PvmActivityTask thread id  is {}, subThreadContext is {} {} ", Thread.currentThread().getId(), subThreadContext);
 

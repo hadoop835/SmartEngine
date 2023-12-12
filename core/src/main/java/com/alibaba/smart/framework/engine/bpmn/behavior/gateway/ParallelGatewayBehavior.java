@@ -5,16 +5,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import com.alibaba.smart.framework.engine.behavior.base.AbstractActivityBehavior;
 import com.alibaba.smart.framework.engine.bpmn.assembly.gateway.ParallelGateway;
 import com.alibaba.smart.framework.engine.common.util.InstanceUtil;
 import com.alibaba.smart.framework.engine.common.util.MarkDoneUtil;
 import com.alibaba.smart.framework.engine.configuration.ConfigurationOption;
-import com.alibaba.smart.framework.engine.configuration.LockStrategy;
 import com.alibaba.smart.framework.engine.configuration.ParallelServiceOrchestration;
-import com.alibaba.smart.framework.engine.configuration.impl.PvmActivityTask;
+import com.alibaba.smart.framework.engine.configuration.PvmActivityTask;
 import com.alibaba.smart.framework.engine.configuration.scanner.AnnotationScanner;
 import com.alibaba.smart.framework.engine.context.ExecutionContext;
 import com.alibaba.smart.framework.engine.context.factory.ContextFactory;
@@ -110,21 +111,21 @@ public class ParallelGatewayBehavior extends AbstractActivityBehavior<ParallelGa
                 ContextFactory contextFactory = annotationScanner.getExtensionPoint(ExtensionConstant.COMMON, ContextFactory.class);
 
 
-                List<PvmActivityTask> tasks = new ArrayList<PvmActivityTask>(outcomeTransitions.size());
+                Collection<PvmActivityTask> tasks = new ArrayList<PvmActivityTask>(outcomeTransitions.size());
 
                 for (Entry<String, PvmTransition> pvmTransitionEntry : outcomeTransitions.entrySet()) {
                     PvmActivity target = pvmTransitionEntry.getValue().getTarget();
 
                     //注意,ExecutionContext 在多线程情况下,必须要新建对象,防止一些变量被并发修改.
                     ExecutionContext subThreadContext = contextFactory.createChildThreadContext(context);
-                    PvmActivityTask task = new PvmActivityTask(target,subThreadContext);
+                    PvmActivityTask task = context.getProcessEngineConfiguration().getPvmActivityTaskFactory().create(target,subThreadContext);
 
                     tasks.add(task);
                 }
 
 
                 try {
-                    executorService.invokeAll(tasks);
+                  executorService.invokeAll(tasks);
                 } catch (InterruptedException e) {
                     throw new EngineException(e.getMessage(), e);
                 }
@@ -135,12 +136,13 @@ public class ParallelGatewayBehavior extends AbstractActivityBehavior<ParallelGa
             //join 时必须使用分布式锁。
             // update at 2022.10.31 这里的缩粒度不够大,在极端环境下,还是存在数据可见性的问题.
             // 比如说,当这个锁结束后, 外面还需要进行持久化数据. 理论上,另外一个线程进来执行时,可能这个持久化数据还未完成.
-            // 所以这里取消掉锁,改为外部锁
+            // 所以这里取消掉默认锁,改为建议在生产环境使用使用分布式锁.
+            // 需要在Join时实现这个对应的并发控制策略
 
-            LockStrategy lockStrategy = context.getProcessEngineConfiguration().getLockStrategy();
-            if(null == lockStrategy){
-                throw new EngineException("LockStrategy must be implemented for ParallelGateway");
-            }
+//            LockStrategy lockStrategy = context.getProcessEngineConfiguration().getLockStrategy();
+//            if(null == lockStrategy){
+//                throw new EngineException("LockStrategy must be implemented for ParallelGateway");
+//            }
 
 //            String processInstanceId = context.getProcessInstance().getInstanceId();
 //            try{

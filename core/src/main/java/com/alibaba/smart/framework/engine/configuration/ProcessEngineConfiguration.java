@@ -162,6 +162,10 @@ public interface ProcessEngineConfiguration {
 
     Map<String,Object> getMagicExtension();
 
+
+    void setPvmActivityTaskFactory(PvmActivityTaskFactory pvmActivityTaskFactory);
+    PvmActivityTaskFactory getPvmActivityTaskFactory();
+
     // 是否要干掉 用于配置扩展,默认可以为空。设计目的是根据自己的业务需求,来自定义存储(该机制会绕过引擎自带的各种Storage机制,powerful and a little UnSafe)。。
     //void setPersisterStrategy(PersisterStrategy persisterStrategy);
     //
